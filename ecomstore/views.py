@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
-from . models import Product,Category
+from . models import Product,Category, Profile
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.urls import reverse
-from . forms import SignUpForm,UpdateUserForm, ChangePasswordForm
+from . forms import SignUpForm,UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth.models import User
 # Create your views here.
 
@@ -94,8 +94,8 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(request,username=username,password=password)
             login(request,user)
-            messages.success(request,'Registered Successfully...')
-            return redirect('home')
+            messages.success(request,'User Created please fill this form...')
+            return redirect('update_info')
         else:
             messages.success(request,'Whoops! There was a problem registering please try again...')
             return redirect('register')
@@ -106,3 +106,17 @@ def category_summary(request):
     categories = Category.objects.all()
     return render(request,'category_summary.html',{'categories':categories})
         
+def update_info(request):
+    if request.user.is_authenticated:
+        current_user = Profile.objects.get(user__id=request.user.id)
+        form = UserInfoForm(request.POST or None, instance=current_user)
+        
+        if form.is_valid():
+            form.save()
+           
+            messages.success(request,'User Info Updated!!!')
+            return redirect('home')
+        return render(request,'update_info.html',{'form':form})
+    else:
+        messages.error(request,'You must logged in to access this page!!!')
+        return redirect('home')
