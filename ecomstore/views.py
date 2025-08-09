@@ -6,6 +6,8 @@ from django.urls import reverse
 from . forms import SignUpForm,UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django.contrib.auth.models import User
 from django.db.models import Q
+import json
+from cart.cart import Cart
 # Create your views here.
 
 def update_password(request):
@@ -72,6 +74,14 @@ def login_user(request):
         user = authenticate(request,username=username,password=password)
         if user:
             login(request,user)
+            current_user = Profile.objects.get(user__id=request.user.id)
+            saved_cart = current_user.old_cart
+            if saved_cart:
+                converted_cart = json.loads(saved_cart)
+                cart = Cart(request)
+                for key,value in converted_cart.items():
+                    cart.db_add(product=key,quantity=value)
+                    
             messages.success(request,'You have logged in successfully...')
             return redirect('home')
         else:
@@ -125,7 +135,7 @@ def update_info(request):
 def search(request):
     if request.method == 'POST':
         searched = request.POST['searched']
-        searched = Product.objects.filter(Q(name__icontains=searched) or Q(description__icontains=searched))
+        searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
         if not searched:
             messages.error(request,'That Product Doesnt exist please try again...')
             return render(request,'search.html',{})

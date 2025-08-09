@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ecomstore',
-    'cart'
+    'cart',
+    'payments'
 ]
 
 MIDDLEWARE = [
