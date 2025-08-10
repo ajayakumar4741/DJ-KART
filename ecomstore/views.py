@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.urls import reverse
 from . forms import SignUpForm,UpdateUserForm, ChangePasswordForm, UserInfoForm
+from payments.forms import ShippingForm
+from payments.models import ShippingAddress
 from django.contrib.auth.models import User
 from django.db.models import Q
 import json
@@ -120,14 +122,19 @@ def category_summary(request):
 def update_info(request):
     if request.user.is_authenticated:
         current_user = Profile.objects.get(user__id=request.user.id)
+        try:
+            shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
+        except ShippingAddress.DoesNotExist:
+            shipping_user = None
         form = UserInfoForm(request.POST or None, instance=current_user)
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
         
-        if form.is_valid():
+        if form.is_valid() or shipping_form.is_valid():
             form.save()
-           
+            shipping_form.save() 
             messages.success(request,'User Info Updated!!!')
             return redirect('home')
-        return render(request,'update_info.html',{'form':form})
+        return render(request,'update_info.html',{'form':form,'shipping_form':shipping_form})
     else:
         messages.error(request,'You must logged in to access this page!!!')
         return redirect('home')
