@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404,redirect
+from django.shortcuts import render,get_object_or_404
 from . cart import Cart
 from ecomstore.models import Product
 from django.http import JsonResponse
@@ -10,7 +10,8 @@ def cart_summary(request):
     cart_products = cart.get_products
     quantities = cart.get_qts
     totals = cart.cart_total()
-    return render(request,'cart_summary.html',{'cart_products':cart_products,'quantities':quantities,'totals':totals})
+    
+    return render(request,'cart_summary.html',{'cart_products':cart_products,'quantities':quantities,'totals':totals,'range_list': range(1, 7)})
 
 def cart_add(request):
     cart = Cart(request)

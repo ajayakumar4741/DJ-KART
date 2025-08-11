@@ -52,13 +52,10 @@
                     <option selected>{{ value }}</option>
                   {% endif %}
               {% endfor %}
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="3">4</option>
-              <option value="3">5</option>
-              <option value="3">6</option>
+              
+              {% for i in range_list %}
+              <option value="{{i}}">{{i}}</option>
+              {% endfor %}
             </select>
             </div>
             </div>
@@ -68,15 +65,22 @@
             <button type="button" data-index="{{ product.id }}" class="btn btn-danger delete-product">Delete item</button>
        
       </div>
+    
     </div>
+    
   </div>
+  
 </div>
+
         
     </div>
     <br>
     
         {% endfor %}
+        <div style="text-align: center;">
         <h3 style="margin-left: 2em;">Total: ${{ totals }} </h3>
+        <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
+        </div>
     {% else %}
         Your cart is empty
         {% endif %}
