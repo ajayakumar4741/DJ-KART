@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Billing Info</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Enter Your Payment Info...</p>
+        </div>
+    </div>
+</header>
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Order Summary
+                </div>
+                <div class="card-body">
+                    {% for product in cart_products %}
+                   <strong>{{product.name}}</strong> 
+                    <br>
+                    {% if product.is_sale %}
+                    price: ${{product.sale_price}}
+                    {% else %}
+                    price: ${{product.price}}
+                    {% endif %}
+                    <br>
+                    <small>Quantity:
+                        {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                        {{ value }}
+                        {% endif %}
+                        {% endfor %}</small>
+                    <br>
+                    <br>
+                    {% endfor %}
+                   <i>Total:</i>  ${{totals}}
+                    <br>
+                    <br>
+                    <a href="{% url 'cart_summary' %}" class="btn btn-outline-primary">Update Items</a>
+                </div>
+
+            </div>
+            <br>
+            <div class="card">
+                <div class="card-header">
+                    Shipping Info
+                </div>
+                <div class="card-body">
+                    
+                    <strong>Name:</strong>   &nbsp;  &nbsp;  {{shipping_info.shipping_full_name}} <br>
+                    <strong>Email:</strong>   &nbsp;  &nbsp; {{shipping_info.shipping_email}} <br>
+                    <strong>Address1:</strong> &nbsp; &nbsp; {{shipping_info.shipping_address1}} <br>
+                    <strong>Address2:</strong>  &nbsp; &nbsp; {{shipping_info.shipping_address2}} <br>
+                    <strong>City:</strong>    &nbsp; &nbsp;  {{shipping_info.shipping_city}} <br>
+                    <strong>Country:</strong> &nbsp;  &nbsp; {{shipping_info.shipping_country}} <br>
+                    <strong>Zipcode:</strong>  &nbsp; &nbsp; {{shipping_info.shipping_zipcode}} <br>
+                    <strong>State:</strong>  &nbsp;  &nbsp;  {{shipping_info.shipping_state}} <br>
+                    <br>
+                    <a href="{% url 'checkout' %}" class="btn btn-outline-primary">Update Info</a>
+                </div>
+                
+            </div>
+            <br>
+            <br>
+            <div class="card">
+                <div class="card-header">
+                    Billing Info
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'process_order' %}" method="post">
+                        {% csrf_token %}
+                    {{billing_form.as_p}}
+                </div>
+                
+            </div>
+            <br>
+                <button type="submit" class="btn btn-success">Pay Now</button>
+        </form>
+                
+        </div>
+
+    </div>
+
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% endblock %}
