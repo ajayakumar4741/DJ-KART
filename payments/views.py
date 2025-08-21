@@ -113,4 +113,30 @@ def checkout(request):
     else:
         shipping_form = ShippingForm(request.POST or None)
         return render(request,'checkout.html',{'cart_products':cart_products,'quantities':quantities,'totals':totals,'shipping_form':shipping_form})
+    
+def not_shipped_dash(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.filter(shipped=False)
+        return render(request,'not_shipped_dash.html',{'order':order})
+    else:
+        messages.error(request,'Access Denied...')
+        return redirect('home')
+
+def shipped_dash(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.filter(shipped=True)
+        return render(request,'shipped_dash.html',{'order':order})
+    else:
+        messages.error(request,'Access Denied...')
+        return redirect('home')  
      
+def orders(request,pk):
+    if request.user.is_authenticated and request.user.is_superuser:
+        # get the order
+        order = Order.objects.get(id=pk)
+        # get the item
+        items = OrderItem.objects.filter(order=pk)
+        return render(request,'orders.html',{'order':order,'items':items})
+    else:
+        messages.error(request,'Access Denied...')
+        return redirect('home')
