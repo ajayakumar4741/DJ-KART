@@ -86,7 +86,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ecom_db',
-        'HOST': 'localhost',
+        'HOST': os.getenv('PGHOST'),
         'PORT': '5432',
         'USER': 'postgres',
         'PASSWORD': os.environ.get('DB_PASSWORD')
