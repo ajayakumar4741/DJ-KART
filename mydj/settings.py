@@ -29,8 +29,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dj-kart-production.up.railway.app','https://dj-kart-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://dj-kart-production.up.railway.app']
+ALLOWED_HOSTS = []
+
 
 # Application definition
 
@@ -86,7 +86,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ecom_db',
-        'HOST': os.getenv('PGHOST'),
+        'HOST': 'localhost',
         'PORT': '5432',
         'USER': 'postgres',
         'PASSWORD': os.environ.get('DB_PASSWORD')
