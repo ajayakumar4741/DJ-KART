@@ -22,7 +22,7 @@
                 </div>
                 <div class="card-body">
                     {% for product in cart_products %}
-                   <strong>{{product.name}}</strong> 
+                    <strong>{{product.name}}</strong>
                     <br>
                     {% if product.is_sale %}
                     price: ${{product.sale_price}}
@@ -39,7 +39,7 @@
                     <br>
                     <br>
                     {% endfor %}
-                   <i>Total:</i>  ${{totals}}
+                    <i>Total:</i> ${{totals}}
                     <br>
                     <br>
                     <a href="{% url 'cart_summary' %}" class="btn btn-outline-primary">Update Items</a>
@@ -52,20 +52,26 @@
                     Shipping Info
                 </div>
                 <div class="card-body">
-                    
-                    <strong>Name:</strong>   &nbsp;  &nbsp;  {{shipping_info.shipping_full_name}} <br>
-                    <strong>Email:</strong>   &nbsp;  &nbsp; {{shipping_info.shipping_email}} <br>
+
+                    <strong>Name:</strong> &nbsp; &nbsp; {{shipping_info.shipping_full_name}} <br>
+                    <strong>Email:</strong> &nbsp; &nbsp; {{shipping_info.shipping_email}} <br>
                     <strong>Address1:</strong> &nbsp; &nbsp; {{shipping_info.shipping_address1}} <br>
-                    <strong>Address2:</strong>  &nbsp; &nbsp; {{shipping_info.shipping_address2}} <br>
-                    <strong>City:</strong>    &nbsp; &nbsp;  {{shipping_info.shipping_city}} <br>
-                    <strong>Country:</strong> &nbsp;  &nbsp; {{shipping_info.shipping_country}} <br>
-                    <strong>Zipcode:</strong>  &nbsp; &nbsp; {{shipping_info.shipping_zipcode}} <br>
-                    <strong>State:</strong>  &nbsp;  &nbsp;  {{shipping_info.shipping_state}} <br>
+                    <strong>Address2:</strong> &nbsp; &nbsp; {{shipping_info.shipping_address2}} <br>
+                    <strong>City:</strong> &nbsp; &nbsp; {{shipping_info.shipping_city}} <br>
+                    <strong>Country:</strong> &nbsp; &nbsp; {{shipping_info.shipping_country}} <br>
+                    <strong>Zipcode:</strong> &nbsp; &nbsp; {{shipping_info.shipping_zipcode}} <br>
+                    <strong>State:</strong> &nbsp; &nbsp; {{shipping_info.shipping_state}} <br>
                     <br>
                     <a href="{% url 'checkout' %}" class="btn btn-outline-primary">Update Info</a>
                 </div>
-                
+
             </div>
+            <br>
+            <br>
+            <div style="display: flex; justify-content: center;">
+                {{ paypal_form.render }}
+            </div>
+
             <br>
             <br>
             <div class="card">
@@ -75,14 +81,14 @@
                 <div class="card-body">
                     <form action="{% url 'process_order' %}" method="post">
                         {% csrf_token %}
-                    {{billing_form.as_p}}
+                        {{billing_form.as_p}}
                 </div>
-                
+
             </div>
             <br>
-                <button type="submit" class="btn btn-success">Pay Now</button>
-        </form>
-                
+            <button type="submit" class="btn btn-success">Pay Now</button>
+            </form>
+
         </div>
 
     </div>

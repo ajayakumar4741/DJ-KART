@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'ecomstore',
     'cart',
     'payments',
-    'whitenoise.runserver_nostatic'
+    'whitenoise.runserver_nostatic',
+    'paypal.standard.ipn'
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,7 @@ MEDIA_ROOT =  BASE_DIR/ 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Add paypal settings
+PAYPAL_TEST = True
+
+PAYPAL_RECIEVER_EMAIL = 'djbusiness@dj.com' # busineess sanfbox account of paypal

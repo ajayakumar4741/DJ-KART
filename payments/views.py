@@ -6,7 +6,11 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from ecomstore.models import Product, Profile
 from django.utils import timezone
-# Create your views here.
+from django.urls import reverse
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
+import uuid # for unique usr
+
 
 def process_order(request):
     if request.POST:
@@ -85,6 +89,9 @@ def process_order(request):
 
 def payment_success(request):
      return render(request,'payment_success.html',{})
+ 
+def payment_failed(request):
+     return render(request,'payment_failed.html',{})
 
 def billing_info(request):
     if request.POST:
@@ -95,13 +102,29 @@ def billing_info(request):
         # create a session of shipping info
         my_shipping = request.POST
         request.session['my_shipping'] = my_shipping
+        # get the host
+        host = request.get_host()
+        # create paypal form dict
+        paypal_dict = {
+            'business': settings.PAYPAL_RECIEVER_EMAIL,
+            'amount': totals,
+            'item_name': 'Ordered Bikes',
+            'no_shipping': '2',
+            'invoice': str(uuid.uuid4()),
+            'currency_code': 'USD',
+            'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
+            'return_url': 'http://{}{}'.format(host, reverse('payment_success')),
+            'cancel_return': 'http://{}{}'.format(host, reverse('payment_failed'))
+        }
+        # actual paypal button
+        paypal_form = PayPalPaymentsForm(initial=paypal_dict)
         
         if request.user.is_authenticated:
             billing_form = PaymentForm()
-            return render(request,'billing_info.html',{'cart_products':cart_products,'quantities':quantities,'totals':totals,'shipping_info':request.POST,'billing_form':billing_form})
+            return render(request,'billing_info.html',{'paypal_form':paypal_form,'cart_products':cart_products,'quantities':quantities,'totals':totals,'shipping_info':request.POST,'billing_form':billing_form})
         else:
             billing_form = PaymentForm()
-            return render(request,'billing_info.html',{'cart_products':cart_products,'quantities':quantities,'totals':totals,'shipping_info':request.POST,'billing_form':billing_form})
+            return render(request,'billing_info.html',{'paypal_form':paypal_form,'cart_products':cart_products,'quantities':quantities,'totals':totals,'shipping_info':request.POST,'billing_form':billing_form})
     else:
         messages.error(request,'Access Denied...')
         return redirect('home')
