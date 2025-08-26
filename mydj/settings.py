@@ -29,8 +29,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['59a6df548616.ngrok-free.app','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://59a6df548616.ngrok-free.app']
 
 # Application definition
 
@@ -146,4 +146,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Add paypal settings
 PAYPAL_TEST = True
 
-PAYPAL_RECIEVER_EMAIL = 'djbusiness@dj.com' # busineess sanfbox account of paypal
+PAYPAL_RECEIVER_EMAIL = 'djbusiness@dj.com' # busineess sanfbox account of paypal
