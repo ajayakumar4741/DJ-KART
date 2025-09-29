@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from . models import Product,Category, Profile
+from . models import Product,Category, Profile, PasswordResetRequest
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.urls import reverse
@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 import json
 from cart.cart import Cart
+from django.utils.crypto import get_random_string
 # Create your views here.
 
 def update_password(request):
@@ -31,6 +32,37 @@ def update_password(request):
     else:
         messages.success(request,'You must logged in to access this page!!!')
         return redirect('home')
+    
+def reset_password(request, token):
+    reset_request = PasswordResetRequest.objects.filter(token=token).first()
+    
+    if not reset_request or not reset_request.is_valid():
+        messages.error(request, 'Invalid or expired reset link')
+        return redirect('home')
+
+    if request.method == 'POST':
+        new_password = request.POST['new_password']
+        reset_request.user.set_password(new_password)
+        reset_request.user.save()
+        messages.success(request, 'Password reset successful')
+        return redirect('login')
+
+    return render(request, 'reset-password.html', {'token': token})
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        user = User.objects.filter(email=email).first()
+        
+        if user:
+            token = get_random_string(32)
+            reset_request = PasswordResetRequest.objects.create(user=user, email=email, token=token)
+            reset_request.send_reset_email()
+            messages.success(request, 'Reset link sent to your email.')
+        else:
+            messages.error(request, 'Email not found.')
+    
+    return render(request, 'forgot-password.html')
 
 def update_user(request):
     if request.user.is_authenticated:

@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import datetime
+from django.core.mail import send_mail
+from django.conf import settings
+from django.urls import reverse
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+
 # Create your models here.
 
 
@@ -69,3 +75,25 @@ class Order(models.Model):
     def __str__(self):
         return self.product
     
+class PasswordResetRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField()
+    token = models.CharField(max_length=32, default=get_random_string(32), editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Define token validity period (e.g., 1 hour)
+    TOKEN_VALIDITY_PERIOD = timezone.timedelta(hours=1)
+
+    def is_valid(self):
+        return timezone.now() <= self.created_at + self.TOKEN_VALIDITY_PERIOD
+
+    def send_reset_email(self):
+        reset_link = f"http://127.0.0.1:8000{reverse('reset_password', args=[self.token])}"
+        send_mail(
+            'Password Reset Request',
+            f'Click the following link to reset your password: {reset_link}',
+            settings.DEFAULT_FROM_EMAIL,
+            [self.email],
+            fail_silently=False,
+        )
+ 
