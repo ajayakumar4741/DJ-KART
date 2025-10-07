@@ -23,14 +23,14 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-5-@0+gxks#3q_uc&9ap2=6sfzqepssr40ua+1h2^lsx^85u()+'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['59a6df548616.ngrok-free.app','127.0.0.1','localhost','dj-kart-production.up.railway.app','https://dj-kart-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://59a6df548616.ngrok-free.app','https://dj-kart-production.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','vavoril940.pythonanywhere.com']
+# CSRF_TRUSTED_ORIGINS = ['https://59a6df548616.ngrok-free.app','https://dj-kart-production.up.railway.app']
 
 # Application definition
 
